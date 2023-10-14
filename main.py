@@ -13,7 +13,7 @@ from send2trash import send2trash
 
 INPUT_AXIS = 'T'
 YOUR_MASS = 50
-INPUT_ACCE_CSV = 'Input\\fastes.csv'
+INPUT_ACCE_CSV = 'fastes.csv'
 DATA_SMOOTHING = 1  #1 for filter the data, 0 for not
 OUTPUT_DIRECTORY = f'{INPUT_AXIS}_Axis_Result'
 FINAL_RESULT = f'{OUTPUT_DIRECTORY}\\Zfinal.txt'
