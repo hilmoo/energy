@@ -11,6 +11,7 @@ Convert acceleration to velocity and displacement using integrate
 2. Change `YOUR_MASS = 50` to your mass
 3. Change `INPUT_ACCE_CSV = 'example.csv'` to your csv file
 4. Make sure yout csv file contain this header
+   ```
    time,ax,ay,az,aT
 5. Change `INPUT_AXIS = 'T'` if you want to another axis (x / y / z / T)
 6. Change `DATA_SMOOTHING = 1` to 0 if you dont want to smooth the data
