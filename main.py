@@ -1,7 +1,7 @@
 '''
 #                      Pengolah Data Akselerasi
 #               	Dibuat untuk Memenuhi Tugas UTS
-# 			              (c) Hilmi Musyaffa
+# 						(c) Hilmi Musyaffa
 '''
 
 import csv, os
@@ -14,8 +14,8 @@ from send2trash import send2trash
 
 INPUT_AXIS = 'T'
 YOUR_MASS = 50
-INPUT_ACCE_CSV = 'example.csv'
-DATA_SMOOTHING = 1  #1 for filter the data, 0 for not
+INPUT_ACCE_CSV = 'Input\\fastes.csv'
+DATA_SMOOTHING = 0  #1 for filter the data, 0 for not
 if bool(DATA_SMOOTHING):
     OUTDC = 'Filtered'
 else:
@@ -63,6 +63,7 @@ if not os.path.exists(OUTPUT_DIRECTORY):
 df = pd.read_csv(INPUT_ACCE_CSV)
 t = df['time']
 a = df[f'a{INPUT_AXIS}']
+TOTAL_TIME = t.max() - t.min()
 
 plt.plot(t, a, color = COLOR_LINE)
 plt.axhline(y=0, color='black', linestyle='-', linewidth=0.5)
@@ -248,7 +249,7 @@ plt.close()
 with open(FINAL_RESULT, mode='w', newline='') as output_file:
     writer = csv.writer(output_file)
     work = cumtrapz(y, x=x)
-    works = work.sum()/(23.591786)
+    works = work.sum()/(TOTAL_TIME)
     writer.writerow([f'Work = {works} Joule'])
 
 
@@ -261,6 +262,6 @@ with open(OUTPUT_VELO_CSV, mode='r') as input_file, open(ENERGY, mode='w', newli
         x = float(row[1])
         ex = (1/2 * YOUR_MASS * x * x)
         energy.append(ex)
-    energyF = sum(energy)/23.591786
+    energyF = sum(energy)/TOTAL_TIME
     writer.writerow([f'Energy = {energyF} Joule'])
 
