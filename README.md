@@ -20,7 +20,6 @@ Convert acceleration to velocity and displacement using integrate from csv file
 8. If you want to smooth the data, replace this line so that your data is more accurate
    ```
     CUTOFF_FREQUENCY = 0.00355  # Adjust this value according to your requirements
-    SAMPLING_RATE = 200.0  # Replace with your actual sampling rate
     FILTER_ORDER = 4  # You can adjust the filter order as needed
    ```
 9. Run the code
