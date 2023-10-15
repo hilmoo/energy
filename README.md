@@ -1,6 +1,7 @@
-Convert acceleration to velocity and displacement using integrate
+Convert acceleration to velocity and displacement using integrate from csv file
 
 ## Requirement
+- python
 - pandas
 - matplotlib
 - scipy
