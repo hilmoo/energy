@@ -6,13 +6,12 @@
 
 import csv, os
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import cumtrapz
 from scipy.signal import butter, filtfilt
 from send2trash import send2trash
 
-INPUT_AXIS = 'T'
+INPUT_AXIS = 'y'
 YOUR_MASS = 50
 INPUT_ACCE_CSV = 'Input\\fastes.csv'
 DATA_SMOOTHING = 0  #1 for filter the data, 0 for not
@@ -40,8 +39,7 @@ OUTPUT_ENERGY_CSV = f'{OUTPUT_DIRECTORY}\\energy.csv'
 OUTPUT_ENERGY_IMG = f'{OUTPUT_DIRECTORY}\\energy.png'
 
 
-CUTOFF_FREQUENCY = 0.00355  # Adjust this value according to your requirements
-SAMPLING_RATE = 200.0  # Replace with your actual sampling rate
+CUTOFF_FREQUENCY = 2.1 # Adjust this value according to your requirements
 FILTER_ORDER = 4  # You can adjust the filter order as needed
 
 if INPUT_AXIS == 'x':
@@ -74,10 +72,12 @@ plt.ylabel(r'$a_%s \ (m/s^2)$' % (INPUT_AXIS))
 plt.savefig(OUTPUT_ACCE_IMG)
 plt.close()
 
+SAMPLING_RATE = len(t)/t.max() 
 def butterworth_lowpass(data, CUTOFF_FREQUENCY, SAMPLING_RATE, FILTER_ORDER):
+    fs_approx = len(t)/t.max()
     nyquist_frequency = 0.5 * SAMPLING_RATE
     normal_cutoff = CUTOFF_FREQUENCY / nyquist_frequency
-    b, a = butter(FILTER_ORDER, normal_cutoff, btype='low', analog=False)
+    b, a = butter(FILTER_ORDER, normal_cutoff, btype='low', analog=False, fs = fs_approx)
     smoothed_data = filtfilt(b, a, data)
     return smoothed_data
 
@@ -120,7 +120,17 @@ else:
     OUTPUT_ACCES_CSV=INPUT_ACCE_CSV
     TITLE_PLOT = '(unfiltered)'
 
-
+if not bool(DATA_SMOOTHING):
+    if INPUT_AXIS == 'x':
+        a = 1
+    if INPUT_AXIS == 'y':
+        a = 2
+    if INPUT_AXIS == 'z':
+        a = 3
+    if INPUT_AXIS == 'T':
+        a = 4
+else : 
+    a = 1
 t_data = [];x_data = []
 with open(OUTPUT_ACCES_CSV, mode='r') as input_file, open(OUTPUT_VELO_CSV, mode='w', newline='') as output_file:
     reader = csv.reader(input_file)
@@ -129,7 +139,7 @@ with open(OUTPUT_ACCES_CSV, mode='r') as input_file, open(OUTPUT_VELO_CSV, mode=
     writer.writerow(['time'] + ['velocity'])
     for row in reader:
         t_data.append(float(row[0]))
-        x_data.append(float(row[1]))
+        x_data.append(float(row[a]))
 
     velo_data = cumtrapz(x_data, x=t_data, initial=0)
 
@@ -151,7 +161,6 @@ plt.xlabel('time (s)')
 plt.ylabel(r'$V_%s \ (m/s)$' % (INPUT_AXIS))
 plt.savefig(OUTPUT_VELO_IMG)
 plt.close()
-
 
 t_data = [];x_data = []
 with open(OUTPUT_VELO_CSV, mode='r') as input_file, open(OUTPUT_DISP_CSV, mode='w', newline='') as output_file:
