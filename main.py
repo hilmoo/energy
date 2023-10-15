@@ -1,11 +1,12 @@
 '''
 #                      Pengolah Data Akselerasi
 #               	Dibuat untuk Memenuhi Tugas UTS
-# 				(c) Hilmi Musyaffa
+# 						(c) Hilmi Musyaffa
 '''
 
 import csv, os
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import cumtrapz
 from scipy.signal import butter, filtfilt
@@ -15,7 +16,11 @@ INPUT_AXIS = 'T'
 YOUR_MASS = 50
 INPUT_ACCE_CSV = 'example.csv'
 DATA_SMOOTHING = 1  #1 for filter the data, 0 for not
-OUTPUT_DIRECTORY = f'{INPUT_AXIS}_Axis_Result'
+if bool(DATA_SMOOTHING):
+    OUTDC = 'Filtered'
+else:
+    OUTDC = 'Unfiltered'
+OUTPUT_DIRECTORY = f'{INPUT_AXIS}_Axis_Result_{OUTDC}'
 FINAL_RESULT = f'{OUTPUT_DIRECTORY}\\Zfinal.txt'
 ENERGY = f'{OUTPUT_DIRECTORY}\\Zenergy.txt'
 
@@ -100,17 +105,19 @@ if bool(DATA_SMOOTHING):
     plt.axhline(y=0, color='black', linestyle='-', linewidth=0.5)
     plt.axvline(x=0, color='black', linestyle='-', linewidth=0.5)
     plt.ylim(y.min()-y.min()/100, y.max()+y.max()/100)
-    plt.title(f'{INPUT_AXIS_T} Acceleration Changes Over Time (FIltered)')
+    plt.title(f'{INPUT_AXIS_T} Acceleration Changes Over Time (Filtered)')
     plt.xlabel('time (s)')
     plt.ylabel(r'$a_%s \ (m/s^2)$' % (INPUT_AXIS))
     plt.savefig(OUTPUT_ACCES_IMG)
     plt.close()
+    TITLE_PLOT = '(filtered)'
 else:
     if os.path.exists(OUTPUT_ACCES_CSV):
         send2trash(OUTPUT_ACCES_CSV)
     if os.path.exists(OUTPUT_ACCES_IMG):
         send2trash(OUTPUT_ACCES_IMG)
     OUTPUT_ACCES_CSV=INPUT_ACCE_CSV
+    TITLE_PLOT = '(unfiltered)'
 
 
 t_data = [];x_data = []
@@ -138,7 +145,7 @@ plt.plot(x, y, color = COLOR_LINE)
 plt.axhline(y=0, color='black', linestyle='-', linewidth=0.5)
 plt.axvline(x=0, color='black', linestyle='-', linewidth=0.5)
 plt.ylim(y.min()-y.min()/100, y.max()+y.max()/100)
-plt.title(f'{INPUT_AXIS_T} Velocity Changes Over Time')
+plt.title(f'{INPUT_AXIS_T} Velocity Changes Over Time {TITLE_PLOT}')
 plt.xlabel('time (s)')
 plt.ylabel(r'$V_%s \ (m/s)$' % (INPUT_AXIS))
 plt.savefig(OUTPUT_VELO_IMG)
@@ -169,7 +176,7 @@ y = df['displacement']
 plt.plot(x, y, color = COLOR_LINE)
 plt.axhline(y=0, color='black', linestyle='-', linewidth=0.5)
 plt.axvline(x=0, color='black', linestyle='-', linewidth=0.5)
-plt.title(f'{INPUT_AXIS_T} Displacement Changes Over Time')
+plt.title(f'{INPUT_AXIS_T} Displacement Changes Over Time {TITLE_PLOT}')
 plt.xlabel('time (s)')
 plt.ylabel(r'$s_%s \ (m)$' % (INPUT_AXIS))
 plt.savefig(OUTPUT_DISP_IMG)
@@ -199,7 +206,7 @@ plt.plot(x, y, color = COLOR_LINE)
 plt.axhline(y=0, color='black', linestyle='-', linewidth=0.5)
 plt.axvline(x=0, color='black', linestyle='-', linewidth=0.5)
 plt.ylim(y.min()-y.min()/100, y.max()+y.max()/100)
-plt.title(f'{INPUT_AXIS_T} Force Changes Over TIme')
+plt.title(f'{INPUT_AXIS_T} Force Changes Over TIme {TITLE_PLOT}')
 plt.xlabel('time (s)')
 plt.ylabel(r'$F_%s \ (N)$' % (INPUT_AXIS))
 plt.savefig(OUTPUT_FORCE_IMG)
@@ -231,7 +238,7 @@ plt.plot(x, y, color = COLOR_LINE)
 plt.axhline(y=0, color='black', linestyle='-', linewidth=0.5)
 plt.axvline(x=0, color='black', linestyle='-', linewidth=0.5)
 plt.ylim(y.min()-y.min()/100, y.max()+y.max()/100)
-plt.title(f'{INPUT_AXIS_T} Force Changes Over Displacement')
+plt.title(f'{INPUT_AXIS_T} Force Changes Over Displacement {TITLE_PLOT}')
 plt.xlabel(r'$s_%s \ (m)$' % (INPUT_AXIS))
 plt.ylabel(r'$F_%s \ (N)$' % (INPUT_AXIS))
 plt.savefig(OUTPUT_DIFO_IMG)
@@ -256,3 +263,4 @@ with open(OUTPUT_VELO_CSV, mode='r') as input_file, open(ENERGY, mode='w', newli
         energy.append(ex)
     energyF = sum(energy)/23.591786
     writer.writerow([f'Energy = {energyF} Joule'])
+
