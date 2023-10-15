@@ -1,7 +1,7 @@
 '''
 #                      Pengolah Data Akselerasi
 #               	Dibuat untuk Memenuhi Tugas UTS
-# 			(c) Hilmi Musyaffa
+# 			              (c) Hilmi Musyaffa
 '''
 
 import csv, os
