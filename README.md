@@ -12,7 +12,7 @@ Convert acceleration to velocity and displacement using integrate from csv file
 2. Open main.py
 3. Change `YOUR_MASS = 50` to your mass
 4. Change `INPUT_ACCE_CSV = 'example.csv'` to your csv file
-5. Make sure yout csv file contain this header
+5. Make sure your csv file contain this header
    ```
    time,ax,ay,az,aT
 6. Change `INPUT_AXIS = 'T'` if you want to another axis (x / y / z / T)
